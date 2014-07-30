@@ -1,0 +1,31 @@
+"session","scope","httpsession","setattribut","getattribut","sessionid","",""
+
+session 0.1020
+ object 0.0777
+ request 0.0586
+ attribut 0.0493
+ scope 0.0437
+ variabl 0.0333
+ setattribut 0.0322
+ httpsession 0.0291
+ getattribut 0.0283
+ creat 0.0272
+ getsess 0.0260
+ set 0.0231
+ store 0.0199
+ retriev 0.0183
+ exist 0.0110
+ bind 0.0108
+ bound 0.0087
+ cast 0.0047
+ kei 0.0045
+ isnew 0.0039
+$ git add readme.txt
+$ git commit -m "wrote a readme file"
+[master (root-commit) cb926e7] wrote a readme file
+ 1 file changed, 2 insertions(+)
+ create mode 100644 readme.txt
+$ git add file1.txt
+$ git add file2.txt
+$ git add file3.txt
+$ git commit -m "add 3 files."
