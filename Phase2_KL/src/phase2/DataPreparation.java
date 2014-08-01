@@ -22,33 +22,18 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.util.Version;
-
 public class DataPreparation {
 
-	private static PrintWriter dataOutputStream = null;
-	private static PrintWriter dataOutputStreamForGibbsUse = null;
-	private static PrintWriter vocabOutputStream = null;
-	
-	private static String dataOutputFile = Constants.PATH_DATAOUTPUTFILE;
-	private static String dataOutputFileForGibbsUse = Constants.PATH_DATAOUTPUTFILEFORGIBBSUSE;
-	private static String vocabOutputFile = Constants.PATH_VOCABOUTPUTFILE;
 	private static String stopWords = Constants.PATH_STOPWORDS;
 	private static String dataFiles = Constants.PATH_DATAFILES;
 	
 	private static EnglishAnalyzer ea = new EnglishAnalyzer(Version.LUCENE_40);
 	private static StandardAnalyzer sa = new StandardAnalyzer(Version.LUCENE_40);
-	
 
 	/**
 	 * @param args
 	 */
-	public static void main() throws IOException {
+	public static void main(String[] args) throws IOException {
 		
 		System.out.println("********* LDA Input File Preparation started *********");
 		
@@ -57,9 +42,7 @@ public class DataPreparation {
 		Map<String, Integer> mapIndex = new HashMap<String, Integer>();
 		Map<String, Integer> stopwordmap = new HashMap<String, Integer>();
 		
-		dataOutputStream = new PrintWriter(new FileOutputStream(new File(dataOutputFile)));
-		dataOutputStreamForGibbsUse = new PrintWriter(new FileOutputStream(new File(dataOutputFileForGibbsUse)));
-		vocabOutputStream = new PrintWriter(new FileOutputStream(new File(vocabOutputFile)));
+		
 		
 		File dir = new File(dataFiles);
 		File[] files = dir.listFiles();
@@ -76,35 +59,10 @@ public class DataPreparation {
 			readFileByChars(stopWords, stopwordmap); // read stopword in
 														// stopwordmap
 			num(tmap, map, mapIndex, stopwordmap);
-			// output the vocab file
-			outputVocabFile(mapIndex);
-			// output each file into dataOutputFile
-			Map<String, Integer> filemap = new HashMap<String, Integer>();
-			Map<String, Integer> newmap = new HashMap<String, Integer>();
 			
-			dataOutputStreamForGibbsUse.println(files.length);
-			
-			for (int i = 0; i < files.length; i++) {
-				if (!files[i].isHidden()) {
-					String add = files[i].getAbsolutePath();
-					readFileByChars(add, filemap);
-					readFileByChars(filemap, mapIndex, newmap);// update filemap
-																// into newmap,
-																// only item in
-																// mapIndex can
-																// move into
-																// newmap
-					int n = outputNumber(newmap);
-					outputDataFile(files[i].getName(), n, newmap, mapIndex); // index, frequency
-					filemap.clear();
-					newmap.clear();
-				}
-			}
+			System.out.println();
 		}
-		System.out.print("********* LDA Input File Preparation finished **********\n");
-		dataOutputStream.close();
-		dataOutputStreamForGibbsUse.close();
-		vocabOutputStream.close();
+			
 	}
 
 	// generate Map
@@ -189,40 +147,7 @@ public class DataPreparation {
 		}
 	}
 
-	// generate unique words number of one document.
-	public static int outputNumber(Map map) {
-		int N = 0;
-		Set set = map.entrySet();
-		Iterator iterator = set.iterator();
-		while (iterator.hasNext()) {
-			Map.Entry mapentry2 = (Map.Entry) iterator.next();
-			N++;
-		}
-		return N;
-	}
-
-	public static void outputVocabFile(Map map) {
-		Set set = map.entrySet();
-		Iterator iterator = set.iterator();
-		while (iterator.hasNext()) {
-			Map.Entry mapentry = (Map.Entry) iterator.next();
-			vocabOutputStream.println(mapentry.getKey());
-		}
-	}
-
-	public static void outputDataFile(String fileName, int N, Map map, Map mapIndex) {
-		dataOutputStream.print(N + " ");
-		Set set = map.entrySet();
-		Iterator iterator = set.iterator();
-		//dataOutputStreamForGibbsUse.print(fileName + " ");
-		while (iterator.hasNext()) {
-			Map.Entry mapentry = (Map.Entry) iterator.next();
-			dataOutputStream.print(mapIndex.get(mapentry.getKey()) + ":" + mapentry.getValue() + " ");
-			dataOutputStreamForGibbsUse.print(mapentry.getKey() + " ");
-		}
-		dataOutputStream.print("\n");
-		dataOutputStreamForGibbsUse.print("\n");
-	}
+	
 }
 
 class Constants {
@@ -236,33 +161,13 @@ class Constants {
 	
 	//-----------------------------------------------------------------
 	
-	/***** used in Stemmer.java ******/
-		// Input
-		public static final String PATH_ORIGINAL_CORPUS = "c:/Corpus - LDA-servlets";  // 原始的documents
-		// Output
-		public static final String PATH_STEMMED_CORPUS = "c:/CorpusStemmed";   // stemmer 过后的documents
-	
 	/***** used in LDADataPreparation。java *****/
 		// Input
-		//public static final String PATH_DATAFILES = "C:/Users/Administrator/Desktop/Corpus_forToolPaper";  // 这个类的输入document的路径
-		//public static final String PATH_DATAFILES = "C:/Users/Administrator/Desktop/corpusfinal_afile_is_apost_withsourcecode";
-		public static final String PATH_DATAFILES = "C:/Users/Administrator/Desktop/CorpusPostBasedNoCoCde_v2_expertpost3000";
-		//public static final String PATH_DATAFILES =  "C:\\Users\\Administrator\\Desktop\\ldatry\\corpus_t3";
+		public static final String PATH_DATAFILES = "C:/Users/Administrator/Desktop/corpus";
 		
 		public static final String PATH_STOPWORDS = "c:/stopwords.txt";  // 输入的document要用这个filter来过滤无效词
-		//public static final String PATH_STOPWORDS = "C:/stopwords_v2.txt";
 		
-		// Output
-		public static final String PATH_DATAOUTPUTFILE = "C:/Processed-Data.dat";   // 这个类的输出 。 LDA-C需要的输入文件
-		public static final String PATH_VOCABOUTPUTFILE = "C:/vocab.txt";  // 这个类的输出。  LDA-C的字典
-		public static final String PATH_DATAOUTPUTFILEFORGIBBSUSE = 
-			"C:/Users/Administrator/VD J2EE/workspaceForEclipseJUNO/YX_KnowledgeAnalyzerLDA_Java/src/models/casestudy/newdocs.dat";  // 这个类的输出 。 JGibbLDA需要的输入文件
-	
-	
-	
-	
-	
-}
+		}
 
 class LuceneUtil {
 	
@@ -295,7 +200,4 @@ class LuceneUtil {
 	    }
 	    return str;
 	  }
-
-
-
 }
