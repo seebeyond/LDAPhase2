@@ -163,9 +163,9 @@ class Constants {
 	
 	/***** used in LDADataPreparation。java *****/
 		// Input
-		public static final String PATH_DATAFILES = "C:/Users/Administrator/Desktop/corpus";
+		public static final String PATH_DATAFILES = "C:/Users/zouc/Desktop/lda/corpus/CorpusJavaRanchFAQ";
 		
-		public static final String PATH_STOPWORDS = "c:/stopwords.txt";  // 输入的document要用这个filter来过滤无效词
+		public static final String PATH_STOPWORDS = "C:/Users/zouc/Desktop/lda/corpus/stopwords.txt";  
 		
 		}
 
