@@ -59,10 +59,22 @@ public class DataPreparation {
 			readFileByChars(stopWords, stopwordmap); // read stopword in
 														// stopwordmap
 			num(tmap, map, mapIndex, stopwordmap);
-			
-			System.out.println();
-		}
-			
+		}			
+	}
+	
+	public static Map<String, Integer> getArticleWordMap(String filePath) throws IOException {
+		Map<String, Integer> tmap = new HashMap<String, Integer>();
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		Map<String, Integer> mapIndex = new HashMap<String, Integer>();
+		Map<String, Integer> stopwordmap = new HashMap<String, Integer>();		
+		
+		DataPreparation.readFileByChars(filePath, tmap);
+
+		DataPreparation.readFileByChars(stopWords, stopwordmap); // read stopword in
+														// stopwordmap
+		num(tmap, map, mapIndex, stopwordmap);
+		
+		return map;
 	}
 
 	// generate Map

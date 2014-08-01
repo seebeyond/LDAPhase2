@@ -4,42 +4,69 @@ import java.io.*;
 import java.util.*;
 import java.text.*;
 public class Client {
+	public static String CORPUS = "C:\\Users\\zouc\\Desktop\\lda\\corpus\\CorpusJavaRanchFAQ\\";
 	public static String PREPATH = "C:\\Users\\zouc\\Desktop\\lda\\output\\";
-	public static String SAVEPATH = "C:\\Users\\zouc\\Desktop\\lda\\mid_data\\1.txt";
+	public static String SAVEPATH = "C:\\Users\\zouc\\Desktop\\lda\\mid_data\\";
 	public static String DICT = "C:\\Users\\zouc\\Desktop\\lda\\output\\wordmap.txt";
 	
 	public static void main(String[] args) throws IOException {
 		
 		Client t = new Client();
+		
+		/*
 		List<String> phiFiles = t.getPhiFiles(PREPATH);
 		
 		double[] comparable = t.getComparable(phiFiles, 0, 0);
 		
 		//List<List<Double>> lists = t.compareDoubleArrWithSomePhiFiles(phiFiles, t.getManualArr(DICT), 0, 10);
-		
-		List<List<Double>> lists = t.compareDoubleArrWithAllPhiFiles(phiFiles, t.getManualArr(DICT));
-		
+		List<List<Double>> lists = t.compareDoubleArrWithAllPhiFiles(phiFiles, t.getManualArr());
 		//List<List<Double>> lists = t.compareDoubleArrWithAllPhiFiles(phiFiles, comparable);
-		
 		//List<List<Double>> lists = t.compareDoubleArrWithSomePhiFiles(phiFiles, comparable, 0, 10);
 		
 		List<List<Double>> sortedLists = t.sortKLDistance(lists);
 		
-		t.saveToFile(SAVEPATH, sortedLists);
+		t.saveToFile(SAVEPATH+"1.txt", sortedLists);
+		*/
+		
+		t.solution_comparing_articles_and_LDAoutput();
 	}
 	
-	
-	private double[] getManualArr(String dictPath) throws IOException {
-		//String[] keywords = {"upload","fileupload","filename","post","fileoutputstream","utf","mime","size","path"};
-		//String[] keywords = {"thread", "instanc", "multipl", "safe", "pool", "singleton", "simultan", "multi"};
-		String[] keywords = {"session","scope","httpsession","setattribut","getattribut","sessionid"};
-		List<String> keywordList = new ArrayList<String>();
-		for (String kw:keywords)
-			keywordList.add(kw);
-		
-		double averageProbability = 1.0/(keywords.length);
-		
-		BufferedReader br = new BufferedReader(new FileReader(new File(dictPath)));
+	//---------------------------------------------------------------------------------------
+	// This is part is added for the discussion on 07.31. 
+	// Analyze the FAQ articles as input.
+	//---------------------------------------------------------------------------------------
+	public void solution_comparing_articles_and_LDAoutput() throws IOException {
+		List<String> phiFiles = Client.getPhiFiles(PREPATH);
+		List<WordMap> dict = Client.getWordMapList(); // get words in dict
+		List<String> corpusFilesWithFullPath = Client.getCorpusFiles();
+		int counter = 0;
+		for (String path:corpusFilesWithFullPath) {
+			Map<String, Integer> articleWords = DataPreparation.getArticleWordMap(path); // 
+			double[] myCreatedWordDistribution = Client.calArticleWordProbabilityDistribution(dict, articleWords);
+			//List<List<Double>> klDistanceResult = Client.compareDoubleArrWithSomePhiFiles(phiFiles, myCreatedWordDistribution, 0,9);
+			List<List<Double>> klDistanceResult = Client.compareDoubleArrWithAllPhiFiles(phiFiles, myCreatedWordDistribution);
+			List<List<Double>> sortedklDistanceResult = Client.sortKLDistance(klDistanceResult);
+						
+			Client.saveToFile(SAVEPATH+"compare_result_"+Client.getCorpusFileName(path), sortedklDistanceResult);
+			System.out.println("complete "+ counter);
+			counter++;
+		}
+	}
+	private static String getCorpusFileName(String filePath) {
+		String[] arr = filePath.split("\\\\");
+		return arr[arr.length-1];
+	}
+	private static List<String> getCorpusFiles() {
+		File folder = new File(CORPUS);		
+		String[] fileList = folder.list(); 
+		List<String> corpusFilesWithFullPath = new ArrayList<String>();
+		for (String s: fileList) {
+			corpusFilesWithFullPath.add(CORPUS+s);
+		}
+		return corpusFilesWithFullPath;
+	}
+	private static List<WordMap> getWordMapList() throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(new File(Client.DICT)));
 		br.readLine();
 		List<WordMap> wordmap = new ArrayList<WordMap>();
 		String str = "";
@@ -53,8 +80,44 @@ public class Client {
 			@Override
 			public int compare(WordMap wm1, WordMap wm2) {
 				return wm1.seq-wm2.seq;
-			}			
+			}
 		});
+		return wordmap;
+	}
+	private static double[] calArticleWordProbabilityDistribution(List<WordMap> dict, Map<String, Integer> articleWords) throws IOException {
+		
+		Iterator<String> iter = articleWords.keySet().iterator();
+		int count = 0;
+		while (iter.hasNext()) {
+			count += articleWords.get(iter.next());
+		}
+		
+		double averageProbability = 1.0/count;
+		
+		double[] ret = new double[dict.size()];
+		for (int i=0;i<dict.size();i++) {
+			if (articleWords.containsKey((dict.get(i).word)))
+				ret[i] = averageProbability * articleWords.get(dict.get(i).word);
+			else
+				ret[i] = 0.0;
+		}		
+		return ret;
+	}
+	
+	//------------------------- END of 0731 ---------------------------------------------------------------
+	
+	
+	private double[] getManualArr() throws IOException {
+		//String[] keywords = {"upload","fileupload","filename","post","fileoutputstream","utf","mime","size","path"};
+		//String[] keywords = {"thread", "instanc", "multipl", "safe", "pool", "singleton", "simultan", "multi"};
+		String[] keywords = {"session","scope","httpsession","setattribut","getattribut","sessionid"};
+		List<String> keywordList = new ArrayList<String>();
+		for (String kw:keywords)
+			keywordList.add(kw);
+		
+		double averageProbability = 1.0/(keywords.length);
+		
+		List<WordMap> wordmap = Client.getWordMapList();		
 		
 		double[] ret = new double[wordmap.size()];
 		for (int i=0;i<wordmap.size();i++) {
@@ -62,13 +125,13 @@ public class Client {
 				ret[i] = averageProbability;
 			else
 				ret[i] = 0.0;
-				//ret[i] = 1.0e-250;
-		}
-		
+		}		
 		return ret;
 	}
 	
-	private void saveToFile(String fileName, List<List<Double>> sortedLists) throws IOException {
+	
+	
+	private static void saveToFile(String fileName, List<List<Double>> sortedLists) throws IOException {
 		File file = new File(fileName);
 		DecimalFormat df=new DecimalFormat("#.00000"); 
 		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
@@ -81,7 +144,7 @@ public class Client {
 		bw.close();
 	}
 	
-	private List<List<Double>> sortKLDistance(List<List<Double>> lists) {
+	private static List<List<Double>> sortKLDistance(List<List<Double>> lists) {
 		List<List<Double>> sortedLists =  new ArrayList<List<Double>>();
 		for (List<Double> al : lists) {
 			Collections.sort(al);
@@ -90,7 +153,7 @@ public class Client {
 		return sortedLists;
 	}
 	
-	private List<List<Double>> compareDoubleArrWithSomePhiFiles(List<String> phiFiles, double[] comparable, int start, int end) throws IOException {
+	private static List<List<Double>> compareDoubleArrWithSomePhiFiles(List<String> phiFiles, double[] comparable, int start, int end) throws IOException {
 		List<List<Double>> lists = new ArrayList<List<Double>>();
 		for (int f=start;f<end; f++) {
 			List<Double> al = new ArrayList<Double>();
@@ -113,10 +176,9 @@ public class Client {
 		return lists;
 	}
 	
-	private List<List<Double>> compareDoubleArrWithAllPhiFiles(List<String> phiFiles, double[] comparable) throws IOException {
+	private static List<List<Double>> compareDoubleArrWithAllPhiFiles(List<String> phiFiles, double[] comparable) throws IOException {
 		List<List<Double>> lists = new ArrayList<List<Double>>();
 		for (String fileName : phiFiles) {
-		//for (int f=0;f<phiFiles.size(); f++) {
 			List<Double> al = new ArrayList<Double>();
 			File file = new File(fileName);
 			BufferedReader br = new BufferedReader(new FileReader(file));
@@ -164,7 +226,7 @@ public class Client {
 	
 	
 	
-	private List<String> getPhiFiles(String prepath) {
+	private static List<String> getPhiFiles(String prepath) {
 		File folder = new File(prepath);		
 		String[] fileList = folder.list();  
 		List<String> targetFiles = new ArrayList<String>();
