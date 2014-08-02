@@ -178,7 +178,10 @@ public class Client {
 	
 	private static List<List<Double>> compareDoubleArrWithAllPhiFiles(List<String> phiFiles, double[] comparable) throws IOException {
 		List<List<Double>> lists = new ArrayList<List<Double>>();
+		int counter=0;
 		for (String fileName : phiFiles) {
+			System.out.println("comparing "+fileName+" topic number "+ counter);
+			counter++;
 			List<Double> al = new ArrayList<Double>();
 			File file = new File(fileName);
 			BufferedReader br = new BufferedReader(new FileReader(file));
