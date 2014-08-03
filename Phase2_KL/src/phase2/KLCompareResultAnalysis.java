@@ -12,8 +12,62 @@ public class KLCompareResultAnalysis {
 	public static void main(String[] args) throws IOException {
 		
 		//KLCompareResultAnalysis.klCompareResult_findSmallestLDARun();
-		KLCompareResultAnalysis.klCompareResult_findAverageSmallestLDARun();
+		//KLCompareResultAnalysis.klCompareResult_findAverageSmallestLDARun();
+		KLCompareResultAnalysis.klCompareResult_findAverage2();
 	}
+	
+	/*
+	 * Given a specific topicNumber LDA run, calculate the average of min KL over all articles.
+	 * Then calculate above over all topicNumber LDA runs. And then find the smallest.
+	 */
+	public static void klCompareResult_findAverage2() throws IOException {
+		
+		List<String> klCompareResultFilesWithFullPath = KLCompareResultAnalysis.getKLCompareResultFiles();
+		
+		double[] minKLArr = new double[200];
+		
+		for (String path:klCompareResultFilesWithFullPath) {
+			
+			File file = new File(path);
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String str = "";
+			int ldaRunWithHowManyTopicNumber = 1;
+			while ( (str=br.readLine())!=null ) {
+				if (ldaRunWithHowManyTopicNumber==1) {
+					minKLArr[ldaRunWithHowManyTopicNumber-1] += Double.valueOf(str);
+					ldaRunWithHowManyTopicNumber++;
+				} else {
+					int i=0;
+					for (;i<str.length();i++) {
+						if (str.charAt(i)==' '){
+							break;
+						}
+					}
+					
+					minKLArr[ldaRunWithHowManyTopicNumber-1] += Double.valueOf(str.substring(0,i));					
+					ldaRunWithHowManyTopicNumber++;
+				}
+			}
+			
+			br.close();
+		}
+		
+		for (int i=0;i<minKLArr.length;i++) {
+			minKLArr[i] = minKLArr[i]/klCompareResultFilesWithFullPath.size();
+			System.out.println(minKLArr[i]);
+		}
+		
+		double min = Double.MAX_VALUE;
+		int topicNumber = 0;
+		for (int i=0;i<minKLArr.length; i++) {
+			if (minKLArr[i]<min) {
+				min = minKLArr[i];
+				topicNumber = i+1;
+			}
+		}
+		System.out.println(min);
+		System.out.println(topicNumber);		
+	} 
 	
 	/*
 	 * Give an article, every 1-200 LDA run has a smallest KL distance. Calculate the 200 smallest distance average value
@@ -22,8 +76,6 @@ public class KLCompareResultAnalysis {
 	 */
 	public static void klCompareResult_findAverageSmallestLDARun() throws IOException {
 		List<String> klCompareResultFilesWithFullPath = KLCompareResultAnalysis.getKLCompareResultFiles();
-		
-		List<Integer> minvalTopicNumberList = new ArrayList<Integer>();
 		
 		for (String path:klCompareResultFilesWithFullPath) {
 			
