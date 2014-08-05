@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class KLAnalysis_crossLDAruns {
 	
@@ -21,14 +21,34 @@ public class KLAnalysis_crossLDAruns {
 			
 			List<Double[]> list1 = new ArrayList<Double[]>();
 			List<Double[]> list2 = new ArrayList<Double[]>();
-			
+			//-------------file1 ----------------
 			File file1 = new File(path1);
 			BufferedReader br1  =new BufferedReader(new FileReader(file1));
 			String str1 = "";
 			while ( (str1=br1.readLine())!= null  ) {
 				String[] arr = str1.split(" ");
-				
+				Double[] darr1 = new Double[arr.length];
+				for (int j=0;j<arr.length; j++) 
+					darr1[i] = Double.valueOf(arr[j]);
+				list1.add(darr1);
 			}
+			br1.close();
+			//-------------file2 ----------------
+			File file2 = new File(path2);
+			BufferedReader br2  =new BufferedReader(new FileReader(file2));
+			String str2 = "";
+			while ( (str2=br2.readLine())!= null  ) {
+				String[] arr = str2.split(" ");
+				Double[] darr2 = new Double[arr.length];
+				for (int j=0;j<arr.length; j++) 
+					darr2[i] = Double.valueOf(arr[j]);
+				list2.add(darr2);
+			}
+			br2.close();
+			//-------------------------------------
+			
+			
+			
 		}
 		
 	}
@@ -60,4 +80,10 @@ public class KLAnalysis_crossLDAruns {
 		return targetFilesWithFullPath;
 	}
 
+}
+
+class KLMap {
+	int topicNumberOfLDARun;
+	int whichTopic; // the topic number (e.g. 8th. topic) in one LDA run
+	Hashtable<Integer, Double> tracemap;
 }
