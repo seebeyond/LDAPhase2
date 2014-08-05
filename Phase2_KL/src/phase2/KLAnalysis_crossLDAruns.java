@@ -69,16 +69,14 @@ public class KLAnalysis_crossLDAruns implements Serializable {
 				}
 
 				traceMap.put(dd, al);
-				// System.out.println("Complete topicNumberOfLDARun="+dd.topicNumberOfLDARun+" whichTopic="+dd.whichTopic);
+				System.out.println("Complete topicNumberOfLDARun="+dd.topicNumberOfLDARun+" whichTopic="+dd.whichTopic);
 
 			}
-			if (traceMap.size() > 5)
-				break;
 
 		}
 		System.out.println("traceMap construction complete");
 
-		KLAnalysis_crossLDAruns.printTraceMap(traceMap);
+		//KLAnalysis_crossLDAruns.printTraceMap(traceMap);
 		KLAnalysis_crossLDAruns.saveTraceMapToFile(traceMap);
 	}
 
