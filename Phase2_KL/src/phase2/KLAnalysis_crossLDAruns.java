@@ -8,26 +8,28 @@ import java.util.*;
 
 public class KLAnalysis_crossLDAruns {
 	
-	public static String PHIFILEPATH = "E:/temp/output/casestudy/";
+	public static String PHIFILEPATH = "C:/Users/zouc/Desktop/lda/output/";
 	
 	public static void main(String[] args) throws IOException {
 		
 		List<String> phiFiles = KLAnalysis_crossLDAruns.getPhiFiles();
+		
+		Hashtable<DictDistribution, List<Double>> traceMap = new Hashtable<DictDistribution, List<Double>>();
 		
 		for (int i=0;i<phiFiles.size()-1;i++) {
 			
 			String path1 = phiFiles.get(i);
 			String path2 = phiFiles.get(i+1);
 			
-			List<Double[]> list1 = new ArrayList<Double[]>();
-			List<Double[]> list2 = new ArrayList<Double[]>();
+			List<double[]> list1 = new ArrayList<double[]>();
+			List<double[]> list2 = new ArrayList<double[]>();
 			//-------------file1 ----------------
 			File file1 = new File(path1);
 			BufferedReader br1  =new BufferedReader(new FileReader(file1));
 			String str1 = "";
 			while ( (str1=br1.readLine())!= null  ) {
 				String[] arr = str1.split(" ");
-				Double[] darr1 = new Double[arr.length];
+				double[] darr1 = new double[arr.length];
 				for (int j=0;j<arr.length; j++) 
 					darr1[i] = Double.valueOf(arr[j]);
 				list1.add(darr1);
@@ -39,7 +41,7 @@ public class KLAnalysis_crossLDAruns {
 			String str2 = "";
 			while ( (str2=br2.readLine())!= null  ) {
 				String[] arr = str2.split(" ");
-				Double[] darr2 = new Double[arr.length];
+				double[] darr2 = new double[arr.length];
 				for (int j=0;j<arr.length; j++) 
 					darr2[i] = Double.valueOf(arr[j]);
 				list2.add(darr2);
@@ -47,10 +49,29 @@ public class KLAnalysis_crossLDAruns {
 			br2.close();
 			//-------------------------------------
 			
-			
+			// construct the traceMap
+			for (int m=0; m<list1.size(); m++) {
+				
+				double[] darr1 = list1.get(m);
+				List<Double> al = new ArrayList<Double>();
+				DictDistribution dd = new DictDistribution(i+1, m);
+				
+				
+				for (int n=0;n<list2.size(); n++) {	
+					
+					double[] darr2 = list2.get(n);
+					
+					double kl = KLDivergenceCalculator.getKLDivergenceVectorSpaceDistance(darr1, darr2, darr1.length);
+					al.add(kl);
+				}
+				
+				traceMap.put(dd, al);
+				System.out.println("Complete topicNumberOfLDARun="+dd.topicNumberOfLDARun+" whichTopic="+dd.whichTopic);
+				
+			}
 			
 		}
-		
+		System.out.println();
 	}
 	
 	
@@ -82,8 +103,27 @@ public class KLAnalysis_crossLDAruns {
 
 }
 
-class KLMap {
+class DictDistribution {
 	int topicNumberOfLDARun;
 	int whichTopic; // the topic number (e.g. 8th. topic) in one LDA run
-	Hashtable<Integer, Double> tracemap;
+	public DictDistribution(int _topicNumberOfLDARun, int _whichTopic) {
+		this.topicNumberOfLDARun = _topicNumberOfLDARun;
+		this.whichTopic = _whichTopic;
+	}
+	@Override 
+	public boolean equals(Object o) {
+		if (o==null)
+			return false;
+		DictDistribution other = (DictDistribution)o;
+		if (this.topicNumberOfLDARun==other.topicNumberOfLDARun && this.whichTopic==other.whichTopic)
+				return true;
+		else
+				return false;
+	}
+	@Override
+	public int hashCode() {
+		int i1 = this.topicNumberOfLDARun*1000;
+		int i2 = this.whichTopic;
+		return i1|i2;
+	}
 }
