@@ -1,6 +1,6 @@
 package phase2;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,11 +10,26 @@ public class KLAnalysis_crossLDAruns {
 	
 	public static String PHIFILEPATH = "E:/temp/output/casestudy/";
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
 		List<String> phiFiles = KLAnalysis_crossLDAruns.getPhiFiles();
 		
-		
+		for (int i=0;i<phiFiles.size()-1;i++) {
+			
+			String path1 = phiFiles.get(i);
+			String path2 = phiFiles.get(i+1);
+			
+			List<Double[]> list1 = new ArrayList<Double[]>();
+			List<Double[]> list2 = new ArrayList<Double[]>();
+			
+			File file1 = new File(path1);
+			BufferedReader br1  =new BufferedReader(new FileReader(file1));
+			String str1 = "";
+			while ( (str1=br1.readLine())!= null  ) {
+				String[] arr = str1.split(" ");
+				
+			}
+		}
 		
 	}
 	
@@ -37,9 +52,6 @@ public class KLAnalysis_crossLDAruns {
 				return Integer.valueOf(name.substring(index1+8, index2-1));
 			}
 		});
-		
-//		for (String s:targetFiles)
-//			System.out.println(s);
 		
 		List<String> targetFilesWithFullPath = new ArrayList<String>();
 		for (int i=0;i<targetFiles.size(); i++) {
