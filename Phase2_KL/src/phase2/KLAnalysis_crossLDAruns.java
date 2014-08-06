@@ -6,13 +6,15 @@ import java.util.*;
 public class KLAnalysis_crossLDAruns implements Serializable {
 
 	private static final long serialVersionUID = -3965922551823098111L;
-	public static String PHIFILEPATH = "E:/temp/output/casestudy/";
-	public static String TRACEMAPPATH = "C:/Users/Administrator/Desktop/mid-data/traceMap.txt";
+	//public static String PHIFILEPATH = "E:/temp/output/casestudy/";
+	//public static String TRACEMAPPATH = "C:/Users/Administrator/Desktop/mid-data/traceMap.txt";
+	public static String PHIFILEPATH = "C:/Users/zouc/Desktop/lda/output/";
+	public static String TRACEMAPPATH = "C:/Users/zouc/Desktop/lda/mid_data/traceMap.txt";
 	public static double KLThreshold = 2.5;
 
 	public static void main(String[] args) throws Exception {
-		//KLAnalysis_crossLDAruns.constructAndSaveTraceMap();
-		KLAnalysis_crossLDAruns.traceMapAdjacentLayerAnalysis(35);
+		KLAnalysis_crossLDAruns.constructAndSaveTraceMap();
+		//KLAnalysis_crossLDAruns.traceMapAdjacentLayerAnalysis(35);
 	}
 	
 	private static void traceMapAdjacentLayerAnalysis(int topicNumberOfLDARun) throws Exception {
