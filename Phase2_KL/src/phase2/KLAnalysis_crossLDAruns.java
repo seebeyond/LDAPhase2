@@ -6,11 +6,13 @@ import java.util.*;
 public class KLAnalysis_crossLDAruns implements Serializable {
 
 	private static final long serialVersionUID = -3965922551823098111L;
-	public static String PHIFILEPATH = "C:/Users/zouc/Desktop/lda/output/";
-	public static String TRACEMAPPATH = "C:/Users/zouc/Desktop/lda/mid_data/traceMap.txt";
+	public static String PHIFILEPATH = "E:/temp/output/casestudy/";
+	public static String TRACEMAPPATH = "C:/Users/Administrator/Desktop/mid-data/traceMap.txt";
+	public static double KLThreshold = 2.5;
 
 	public static void main(String[] args) throws Exception {
-		KLAnalysis_crossLDAruns.constructAndSaveTraceMap();
+		//KLAnalysis_crossLDAruns.constructAndSaveTraceMap();
+		KLAnalysis_crossLDAruns.traceMapAdjacentLayerAnalysis(34);
 	}
 	
 	private static void traceMapAdjacentLayerAnalysis(int topicNumberOfLDARun) throws Exception {
@@ -74,8 +76,22 @@ public class KLAnalysis_crossLDAruns implements Serializable {
 			}
 
 		
-		System.out.println("traceMap construction complete");
-		//KLAnalysis_crossLDAruns.printTraceMap(traceMap);
+			System.out.println("traceMap construction complete "+traceMap.size());
+			System.out.println("layer="+topicNumberOfLDARun);
+			for (int ii=0;ii<topicNumberOfLDARun;ii++) {
+				
+				DictDistribution dd = new DictDistribution(topicNumberOfLDARun,ii);
+				List<Double> list = traceMap.get(dd);
+				System.out.print(" "+ii+"(");
+			
+				for (int jj=0;jj<list.size();jj++) {
+					if (list.get(jj)<KLThreshold){
+						System.out.print(jj+" ");
+						//System.out.println("connect whichTopic="+jj+" with KLDistance="+list.get(jj));
+					}
+				}
+				System.out.print(")");
+			}
 	}
 
 	private static void constructAndSaveTraceMap() throws Exception {
