@@ -12,7 +12,7 @@ public class KLAnalysis_crossLDAruns implements Serializable {
 
 	public static void main(String[] args) throws Exception {
 		//KLAnalysis_crossLDAruns.constructAndSaveTraceMap();
-		KLAnalysis_crossLDAruns.traceMapAdjacentLayerAnalysis(34);
+		KLAnalysis_crossLDAruns.traceMapAdjacentLayerAnalysis(35);
 	}
 	
 	private static void traceMapAdjacentLayerAnalysis(int topicNumberOfLDARun) throws Exception {
