@@ -13,22 +13,22 @@ public class Client {
 		
 		Client t = new Client();
 		
-		/*
+		
 		List<String> phiFiles = t.getPhiFiles(PREPATH);
 		
-		double[] comparable = t.getComparable(phiFiles, 0, 0);
+		double[] comparable = t.getComparable(phiFiles, 75, 0);
 		
 		//List<List<Double>> lists = t.compareDoubleArrWithSomePhiFiles(phiFiles, t.getManualArr(DICT), 0, 10);
-		List<List<Double>> lists = t.compareDoubleArrWithAllPhiFiles(phiFiles, t.getManualArr());
+		//List<List<Double>> lists = t.compareDoubleArrWithAllPhiFiles(phiFiles, t.getManualArr());
 		//List<List<Double>> lists = t.compareDoubleArrWithAllPhiFiles(phiFiles, comparable);
-		//List<List<Double>> lists = t.compareDoubleArrWithSomePhiFiles(phiFiles, comparable, 0, 10);
+		List<List<Double>> lists = t.compareDoubleArrWithSomePhiFiles(phiFiles, comparable, 75, 77);
 		
 		List<List<Double>> sortedLists = t.sortKLDistance(lists);
 		
 		t.saveToFile(SAVEPATH+"1.txt", sortedLists);
-		*/
 		
-		t.solution_comparing_articles_and_LDAoutput();
+		
+		//t.solution_comparing_articles_and_LDAoutput();
 	}
 	
 	//---------------------------------------------------------------------------------------
