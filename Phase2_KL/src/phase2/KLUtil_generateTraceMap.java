@@ -3,7 +3,7 @@ package phase2;
 import java.io.*;
 import java.util.*;
 
-public class KLAnalysis_crossLDAruns implements Serializable {
+public class KLUtil_generateTraceMap implements Serializable {
 
 	private static final long serialVersionUID = -3965922551823098111L;
 	//public static String PHIFILEPATH = "E:/temp/output/casestudy/";
@@ -17,11 +17,11 @@ public class KLAnalysis_crossLDAruns implements Serializable {
 		//KLAnalysis_crossLDAruns.constructAndSaveBackTraceMap();
 		//KLAnalysis_crossLDAruns.constructAndSaveTraceMap();
 		//KLAnalysis_crossLDAruns.traceMapAdjacentLayerAnalysis(4);
-		KLAnalysis_crossLDAruns.backTraceMapAdjacentLayerAnalysis(4);
+		KLUtil_generateTraceMap.backTraceMapAdjacentLayerAnalysis(4);
 	}
 	
 	private static void backTraceMapAdjacentLayerAnalysis(int topicNumberOfLDARun) throws Exception {
-		List<String> phiFiles = KLAnalysis_crossLDAruns.getPhiFiles();
+		List<String> phiFiles = KLUtil_generateTraceMap.getPhiFiles();
 
 		Hashtable<DictDistribution, List<Double>> traceMap = new Hashtable<DictDistribution, List<Double>>();
 
@@ -100,7 +100,7 @@ public class KLAnalysis_crossLDAruns implements Serializable {
 	}
 	
 	private static void traceMapAdjacentLayerAnalysis(int topicNumberOfLDARun) throws Exception {
-		List<String> phiFiles = KLAnalysis_crossLDAruns.getPhiFiles();
+		List<String> phiFiles = KLUtil_generateTraceMap.getPhiFiles();
 
 		Hashtable<DictDistribution, List<Double>> traceMap = new Hashtable<DictDistribution, List<Double>>();
 
@@ -180,7 +180,7 @@ public class KLAnalysis_crossLDAruns implements Serializable {
 
 	/* Construct back trace map */
 	private static void constructAndSaveBackTraceMap() throws Exception {
-		List<String> phiFiles = KLAnalysis_crossLDAruns.getPhiFiles();
+		List<String> phiFiles = KLUtil_generateTraceMap.getPhiFiles();
 
 		Hashtable<DictDistribution, List<Double>> backTraceMap = new Hashtable<DictDistribution, List<Double>>();
 		
@@ -252,7 +252,7 @@ public class KLAnalysis_crossLDAruns implements Serializable {
 	
 	/* Construct trace map */
 	private static void constructAndSaveTraceMap() throws Exception {
-		List<String> phiFiles = KLAnalysis_crossLDAruns.getPhiFiles();
+		List<String> phiFiles = KLUtil_generateTraceMap.getPhiFiles();
 
 		Hashtable<DictDistribution, List<Double>> traceMap = new Hashtable<DictDistribution, List<Double>>();
 
@@ -315,7 +315,7 @@ public class KLAnalysis_crossLDAruns implements Serializable {
 		System.out.println("traceMap construction complete");
 
 		//KLAnalysis_crossLDAruns.printTraceMap(traceMap);
-		KLAnalysis_crossLDAruns.saveTraceMapToFile(traceMap);
+		KLUtil_generateTraceMap.saveTraceMapToFile(traceMap);
 	}
 
 	// ------------------- Util Functions ------------------------------

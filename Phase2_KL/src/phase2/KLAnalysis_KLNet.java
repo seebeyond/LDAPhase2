@@ -5,14 +5,14 @@ import java.io.*;
 
 public class KLAnalysis_KLNet {
 	
-	public static double connectThreshold=2.8;
+	public static double connectThreshold=3.2;
 	public static String outputPath = "C:/Users/zouc/Desktop/lda/mid_data/layerCompare.txt";
 	public static String branchPath ="C:/Users/zouc/Desktop/lda/mid_data/";
 	
 	public static void main(String[] args) throws Exception {
 		
-		int topicNumberOfLDARun = 124;
-		int whichTopic = 122;
+		int topicNumberOfLDARun = 40;
+		int whichTopic = 38;
 		
 		List<String> branch = new ArrayList<String>();		
 		KLAnalysis_KLNet.getFullBranchUp(topicNumberOfLDARun, whichTopic, branch);
@@ -26,7 +26,7 @@ public class KLAnalysis_KLNet {
 	}
 	
 	public static void getFullBranchUp(int layer, int whichTopic, List<String> branch) throws Exception {
-		Hashtable<DictDistribution, List<Double>> backTraceMap = KLAnalysis_crossLDAruns.readBackTraceMapFromFile();
+		Hashtable<DictDistribution, List<Double>> backTraceMap = KLUtil_generateTraceMap.readBackTraceMapFromFile();
 		//KLAnalysis_crossLDAruns.printTraceMap(newTraceMap);
 		//System.out.println(backTraceMap.size());
 		
@@ -45,7 +45,7 @@ public class KLAnalysis_KLNet {
 				
 				DictDistribution cur = ll.pop();
 				count--;
-				curLayerBranch +=  "[("+cur.topicNumberOfLDARun+" "+cur.whichTopic+")->";
+				curLayerBranch +=  "[("+cur.topicNumberOfLDARun+" "+cur.whichTopic+")<-";
 				
 				List<Double> dlist = backTraceMap.get(cur);
 				if (dlist==null)
@@ -71,7 +71,7 @@ public class KLAnalysis_KLNet {
 	}
 	
 	public static void getFullBranchDown(int layer, int whichTopic, List<String> branch) throws Exception {
-		Hashtable<DictDistribution, List<Double>> newTraceMap = KLAnalysis_crossLDAruns.readTraceMapFromFile();
+		Hashtable<DictDistribution, List<Double>> newTraceMap = KLUtil_generateTraceMap.readTraceMapFromFile();
 		//KLAnalysis_crossLDAruns.printTraceMap(newTraceMap);
 		//System.out.println(newTraceMap.size());
 		
@@ -117,7 +117,7 @@ public class KLAnalysis_KLNet {
 	}
 	
 	public static void allLayerCompare() throws Exception {
-		Hashtable<DictDistribution, List<Double>> newTraceMap = KLAnalysis_crossLDAruns.readTraceMapFromFile();
+		Hashtable<DictDistribution, List<Double>> newTraceMap = KLUtil_generateTraceMap.readTraceMapFromFile();
 		//KLAnalysis_crossLDAruns.printTraceMap(newTraceMap);
 		System.out.println(newTraceMap.size());
 		

@@ -4,7 +4,7 @@ import java.util.*;
 
 // this program proves below fact---------------------------------------------------
 
-// in WordMap.txt file, after every word, there is an int number (from 0 to XXXXX)
+// in WordMap.txt file, after every word, there is an int number (range is from 0 to XXXXX, not inorder)
 // in .phi file, a line is the probability distribution of all words in dict. The sequence in .phi file is according with 
 // the int number sequence mentioned above.
 //---------------------------------------------------------------------------------
