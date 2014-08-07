@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class KLAnalysis_withFAQ {
+public class KLAnalysis_compareFAQ {
 	//public static String RESULTPATH = "C:\\Users\\zouc\\Desktop\\lda\\mid_data\\";
 		public static String RESULTPATH = "C:\\Users\\Administrator\\Desktop\\mid-data\\";
 		
@@ -13,7 +13,7 @@ public class KLAnalysis_withFAQ {
 			
 			//KLAnalysis_withFAQ.klCompareResult_findSmallestLDARun();
 			//KLAnalysis_withFAQ.klCompareResult_findAverageSmallestLDARun();
-			KLAnalysis_withFAQ.klCompareResult_findAverage2();
+			KLAnalysis_compareFAQ.klCompareResult_findAverage2();
 		}
 		
 		/*
@@ -22,7 +22,7 @@ public class KLAnalysis_withFAQ {
 		 */
 		public static void klCompareResult_findAverage2() throws IOException {
 			
-			List<String> klCompareResultFilesWithFullPath = KLAnalysis_withFAQ.getKLCompareResultFiles();
+			List<String> klCompareResultFilesWithFullPath = KLAnalysis_compareFAQ.getKLCompareResultFiles();
 			
 			double[] minKLArr = new double[200];
 			
@@ -75,7 +75,7 @@ public class KLAnalysis_withFAQ {
 		 * Meanwhile find out the smallest average value
 		 */
 		public static void klCompareResult_findAverageSmallestLDARun() throws IOException {
-			List<String> klCompareResultFilesWithFullPath = KLAnalysis_withFAQ.getKLCompareResultFiles();
+			List<String> klCompareResultFilesWithFullPath = KLAnalysis_compareFAQ.getKLCompareResultFiles();
 			
 			for (String path:klCompareResultFilesWithFullPath) {
 				
@@ -118,7 +118,7 @@ public class KLAnalysis_withFAQ {
 		 */
 		public static void klCompareResult_findSmallestLDARun() throws IOException{
 			
-			List<String> klCompareResultFilesWithFullPath = KLAnalysis_withFAQ.getKLCompareResultFiles();
+			List<String> klCompareResultFilesWithFullPath = KLAnalysis_compareFAQ.getKLCompareResultFiles();
 			
 			List<Integer> minvalTopicNumberList = new ArrayList<Integer>();
 			
