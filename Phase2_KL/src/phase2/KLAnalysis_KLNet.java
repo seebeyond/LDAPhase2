@@ -7,19 +7,22 @@ public class KLAnalysis_KLNet {
 	
 	public static double connectThreshold=2.8;
 	public static String outputPath = "C:/Users/zouc/Desktop/lda/mid_data/layerCompare.txt";
+	public static String branchPath ="C:/Users/zouc/Desktop/lda/mid_data/";
 	
 	public static void main(String[] args) throws Exception {
 		
 		int topicNumberOfLDARun = 80;
-		int whichTopic = 26;
+		int whichTopic = 48;
 		
 		List<String> branch = new ArrayList<String>();		
 		KLAnalysis_KLNet.getFullBranchUp(topicNumberOfLDARun, whichTopic, branch);
-		branch = KLAnalysis_KLNet.delFirstAndReverse(branch);
+		
 		KLAnalysis_KLNet.getFullBranchDown(topicNumberOfLDARun, whichTopic, branch);
 		
-		for (String s:branch)
-			System.out.println(s);
+		
+		
+		KLAnalysis_KLNet.printAndSaveBranch(branch, topicNumberOfLDARun, whichTopic, connectThreshold);
+		
 	}
 	
 	public static void getFullBranchUp(int layer, int whichTopic, List<String> branch) throws Exception {
@@ -42,7 +45,7 @@ public class KLAnalysis_KLNet {
 				
 				DictDistribution cur = ll.pop();
 				count--;
-				curLayerBranch += "("+cur.topicNumberOfLDARun+" "+cur.whichTopic+") ";
+				curLayerBranch +=  "[("+cur.topicNumberOfLDARun+" "+cur.whichTopic+")->";
 				
 				List<Double> dlist = backTraceMap.get(cur);
 				if (dlist==null)
@@ -51,14 +54,14 @@ public class KLAnalysis_KLNet {
 				for (int i=0;i<dlist.size();i++) {
 					if (dlist.get(i)<connectThreshold) {
 						DictDistribution nextdd = new DictDistribution(cur.topicNumberOfLDARun-1, i);
+						curLayerBranch += "("+nextdd.topicNumberOfLDARun+" "+nextdd.whichTopic+")";
 						if (!ll.contains(nextdd)) {
 							ll.add(nextdd);
 							newcount++;
 						}						
 					}
 				}
-				
-				
+				curLayerBranch += "] ";				
 			}
 			
 			count = newcount;
@@ -88,7 +91,7 @@ public class KLAnalysis_KLNet {
 				
 				DictDistribution cur = ll.pop();
 				count--;
-				curLayerBranch += "("+cur.topicNumberOfLDARun+" "+cur.whichTopic+") ";
+				curLayerBranch += "[("+cur.topicNumberOfLDARun+" "+cur.whichTopic+")->";
 				
 				List<Double> dlist = newTraceMap.get(cur);
 				if (dlist==null)
@@ -97,12 +100,14 @@ public class KLAnalysis_KLNet {
 				for (int i=0;i<dlist.size();i++) {
 					if (dlist.get(i)<connectThreshold) {
 						DictDistribution nextdd = new DictDistribution(cur.topicNumberOfLDARun+1, i);
+						curLayerBranch += "("+nextdd.topicNumberOfLDARun+" "+nextdd.whichTopic+")";
 						if (!ll.contains(nextdd)) {
 							ll.add(nextdd);
 							newcount++;
 						}						
 					}
 				}
+				curLayerBranch += "] ";
 			}
 			
 			count = newcount;
@@ -142,11 +147,22 @@ public class KLAnalysis_KLNet {
 		bw.close();
 	}
 	
-	private static List<String> delFirstAndReverse(List<String> branch) {
-		branch.remove(0);
-		List<String> al = new ArrayList<String>();
-		for (int i=branch.size()-1; i>=0; i--)
-			al.add(branch.get(i));
-		return al;
+//	private static List<String> delFirstAndReverse(List<String> branch) {
+//		branch.remove(0);
+//		List<String> al = new ArrayList<String>();
+//		for (int i=branch.size()-1; i>=0; i--)
+//			al.add(branch.get(i));
+//		return al;
+//	}
+	
+	private static void printAndSaveBranch(List<String> branch, int topicNumberOfLDARun, int whichTopic, double connectThreshold) throws Exception{
+		File file = new File(branchPath+"branch "+topicNumberOfLDARun+" "+whichTopic+" "+connectThreshold+".txt");
+		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+				
+		for (String s:branch) {
+			System.out.println(s);
+			bw.write(s+"\n");
+		}
+		bw.close();
 	}
 }
