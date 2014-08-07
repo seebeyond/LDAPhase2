@@ -167,7 +167,7 @@ public class Client {
 				for (int i=0;i<arr.length; i++) {
 					curArr[i] = Double.valueOf(arr[i]);
 				}				
-				double klDistance = KLDivergenceCalculator.getKLDivergenceVectorSpaceDistance(comparable, curArr, comparable.length);
+				double klDistance = KLUtil_DivergenceCalculator.getKLDivergenceVectorSpaceDistance(comparable, curArr, comparable.length);
 				al.add(klDistance);
 			}
 			lists.add(al);
@@ -193,7 +193,7 @@ public class Client {
 				for (int i=0;i<arr.length; i++) {
 					curArr[i] = Double.valueOf(arr[i]);
 				}				
-				double klDistance = KLDivergenceCalculator.getKLDivergenceVectorSpaceDistance(comparable, curArr, comparable.length);
+				double klDistance = KLUtil_DivergenceCalculator.getKLDivergenceVectorSpaceDistance(comparable, curArr, comparable.length);
 				al.add(klDistance);
 			}
 			lists.add(al);

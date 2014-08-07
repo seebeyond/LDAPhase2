@@ -9,7 +9,7 @@ import java.util.Collection;
  * @author nlopezgi
  * 
  */
-public class KLDivergenceCalculator {
+public class KLUtil_DivergenceCalculator {
 	
 	public static void main(String[] args) {
 		

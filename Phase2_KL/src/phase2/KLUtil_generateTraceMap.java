@@ -69,7 +69,7 @@ public class KLUtil_generateTraceMap implements Serializable {
 
 					double[] darr2 = list2.get(n);
 
-					double kl = KLDivergenceCalculator
+					double kl = KLUtil_DivergenceCalculator
 							.getKLDivergenceVectorSpaceDistance(darr1, darr2,
 									darr1.length);
 					al.add(kl);
@@ -148,7 +148,7 @@ public class KLUtil_generateTraceMap implements Serializable {
 
 					double[] darr2 = list2.get(n);
 
-					double kl = KLDivergenceCalculator
+					double kl = KLUtil_DivergenceCalculator
 							.getKLDivergenceVectorSpaceDistance(darr1, darr2,
 									darr1.length);
 					al.add(kl);
@@ -228,7 +228,7 @@ public class KLUtil_generateTraceMap implements Serializable {
 
 					double[] darr2 = list2.get(n);
 
-					double kl = KLDivergenceCalculator
+					double kl = KLUtil_DivergenceCalculator
 							.getKLDivergenceVectorSpaceDistance(darr1, darr2,
 									darr1.length);
 					al.add(kl);
@@ -300,7 +300,7 @@ public class KLUtil_generateTraceMap implements Serializable {
 
 					double[] darr2 = list2.get(n);
 
-					double kl = KLDivergenceCalculator
+					double kl = KLUtil_DivergenceCalculator
 							.getKLDivergenceVectorSpaceDistance(darr1, darr2,
 									darr1.length);
 					al.add(kl);
