@@ -11,12 +11,12 @@ public class KLAnalysis_KLNet {
 	
 	public static void main(String[] args) throws Exception {
 		
-		int topicNumberOfLDARun = 80;
-		int whichTopic = 48;
+		int topicNumberOfLDARun = 124;
+		int whichTopic = 122;
 		
 		List<String> branch = new ArrayList<String>();		
 		KLAnalysis_KLNet.getFullBranchUp(topicNumberOfLDARun, whichTopic, branch);
-		
+		branch = KLAnalysis_KLNet.reverse(branch);
 		KLAnalysis_KLNet.getFullBranchDown(topicNumberOfLDARun, whichTopic, branch);
 		
 		
@@ -147,13 +147,13 @@ public class KLAnalysis_KLNet {
 		bw.close();
 	}
 	
-//	private static List<String> delFirstAndReverse(List<String> branch) {
-//		branch.remove(0);
-//		List<String> al = new ArrayList<String>();
-//		for (int i=branch.size()-1; i>=0; i--)
-//			al.add(branch.get(i));
-//		return al;
-//	}
+	private static List<String> reverse(List<String> branch) {
+		
+		List<String> al = new ArrayList<String>();
+		for (int i=branch.size()-1; i>=0; i--)
+			al.add(branch.get(i));
+		return al;
+	}
 	
 	private static void printAndSaveBranch(List<String> branch, int topicNumberOfLDARun, int whichTopic, double connectThreshold) throws Exception{
 		File file = new File(branchPath+"branch "+topicNumberOfLDARun+" "+whichTopic+" "+connectThreshold+".txt");
