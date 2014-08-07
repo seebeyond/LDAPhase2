@@ -10,11 +10,93 @@ public class KLAnalysis_crossLDAruns implements Serializable {
 	//public static String TRACEMAPPATH = "C:/Users/Administrator/Desktop/mid-data/traceMap.txt";
 	public static String PHIFILEPATH = "C:/Users/zouc/Desktop/lda/output/";
 	public static String TRACEMAPPATH = "C:/Users/zouc/Desktop/lda/mid_data/traceMap.txt";
+	public static String BACKTRACEMAPPATH = "C:/Users/zouc/Desktop/lda/mid_data/backTraceMap.txt";
 	public static double KLThreshold = 2.5;
 
 	public static void main(String[] args) throws Exception {
-		KLAnalysis_crossLDAruns.constructAndSaveTraceMap();
-		//KLAnalysis_crossLDAruns.traceMapAdjacentLayerAnalysis(35);
+		//KLAnalysis_crossLDAruns.constructAndSaveBackTraceMap();
+		//KLAnalysis_crossLDAruns.constructAndSaveTraceMap();
+		//KLAnalysis_crossLDAruns.traceMapAdjacentLayerAnalysis(4);
+		KLAnalysis_crossLDAruns.backTraceMapAdjacentLayerAnalysis(4);
+	}
+	
+	private static void backTraceMapAdjacentLayerAnalysis(int topicNumberOfLDARun) throws Exception {
+		List<String> phiFiles = KLAnalysis_crossLDAruns.getPhiFiles();
+
+		Hashtable<DictDistribution, List<Double>> traceMap = new Hashtable<DictDistribution, List<Double>>();
+
+		
+
+			String path1 = phiFiles.get(topicNumberOfLDARun-1);
+			String path2 = phiFiles.get(topicNumberOfLDARun-2);
+
+			List<double[]> list1 = new ArrayList<double[]>();
+			List<double[]> list2 = new ArrayList<double[]>();
+			// -------------file1 ----------------
+			File file1 = new File(path1);
+			BufferedReader br1 = new BufferedReader(new FileReader(file1));
+			String str1 = "";
+			while ((str1 = br1.readLine()) != null) {
+				String[] arr = str1.split(" ");
+				double[] darr1 = new double[arr.length];
+				for (int j = 0; j < arr.length; j++)
+					darr1[j] = Double.valueOf(arr[j]);
+				list1.add(darr1);
+			}
+			br1.close();
+			// -------------file2 ----------------
+			File file2 = new File(path2);
+			BufferedReader br2 = new BufferedReader(new FileReader(file2));
+			String str2 = "";
+			while ((str2 = br2.readLine()) != null) {
+				String[] arr = str2.split(" ");
+				double[] darr2 = new double[arr.length];
+				for (int j = 0; j < arr.length; j++)
+					darr2[j] = Double.valueOf(arr[j]);
+				list2.add(darr2);
+			}
+			br2.close();
+			// -------------------------------------
+
+			// construct the traceMap
+			for (int m = 0; m < list1.size(); m++) {
+
+				double[] darr1 = list1.get(m);
+				List<Double> al = new ArrayList<Double>();
+				DictDistribution dd = new DictDistribution(topicNumberOfLDARun, m);
+
+				for (int n = 0; n < list2.size(); n++) {
+
+					double[] darr2 = list2.get(n);
+
+					double kl = KLDivergenceCalculator
+							.getKLDivergenceVectorSpaceDistance(darr1, darr2,
+									darr1.length);
+					al.add(kl);
+				}
+
+				traceMap.put(dd, al);
+				System.out.println("Complete topicNumberOfLDARun="+dd.topicNumberOfLDARun+" whichTopic="+dd.whichTopic);
+
+			}
+
+		
+			System.out.println("traceMap construction complete "+traceMap.size());
+			System.out.println("layer="+topicNumberOfLDARun);
+			for (int ii=0;ii<topicNumberOfLDARun;ii++) {
+				
+				DictDistribution dd = new DictDistribution(topicNumberOfLDARun,ii);
+				List<Double> list = traceMap.get(dd);
+				System.out.print(" "+ii+"(");
+			
+				for (int jj=0;jj<list.size();jj++) {
+					if (list.get(jj)<KLThreshold){
+						System.out.print(jj+" ");
+						//System.out.println("connect whichTopic="+jj+" with KLDistance="+list.get(jj));
+					}
+				}
+				System.out.print(")");
+			}
 	}
 	
 	private static void traceMapAdjacentLayerAnalysis(int topicNumberOfLDARun) throws Exception {
@@ -96,6 +178,79 @@ public class KLAnalysis_crossLDAruns implements Serializable {
 			}
 	}
 
+	/* Construct back trace map */
+	private static void constructAndSaveBackTraceMap() throws Exception {
+		List<String> phiFiles = KLAnalysis_crossLDAruns.getPhiFiles();
+
+		Hashtable<DictDistribution, List<Double>> backTraceMap = new Hashtable<DictDistribution, List<Double>>();
+		
+		for (int i = phiFiles.size()-1; i >0 ; i--) {
+
+			String path1 = phiFiles.get(i);
+			String path2 = phiFiles.get(i - 1);
+
+			List<double[]> list1 = new ArrayList<double[]>();
+			List<double[]> list2 = new ArrayList<double[]>();
+			// -------------file1 ----------------
+			File file1 = new File(path1);
+			BufferedReader br1 = new BufferedReader(new FileReader(file1));
+			String str1 = "";
+			while ((str1 = br1.readLine()) != null) {
+				String[] arr = str1.split(" ");
+				double[] darr1 = new double[arr.length];
+				for (int j = 0; j < arr.length; j++)
+					darr1[j] = Double.valueOf(arr[j]);
+				list1.add(darr1);
+			}
+			br1.close();
+			// -------------file2 ----------------
+			File file2 = new File(path2);
+			BufferedReader br2 = new BufferedReader(new FileReader(file2));
+			String str2 = "";
+			while ((str2 = br2.readLine()) != null) {
+				String[] arr = str2.split(" ");
+				double[] darr2 = new double[arr.length];
+				for (int j = 0; j < arr.length; j++)
+					darr2[j] = Double.valueOf(arr[j]);
+				list2.add(darr2);
+			}
+			br2.close();
+			// -------------------------------------
+
+			// construct the back trace Map
+			for (int m = 0; m < list1.size(); m++) {
+
+				double[] darr1 = list1.get(m);
+				List<Double> al = new ArrayList<Double>();
+				DictDistribution dd = new DictDistribution(i + 1, m);
+
+				for (int n = 0; n < list2.size(); n++) {
+
+					double[] darr2 = list2.get(n);
+
+					double kl = KLDivergenceCalculator
+							.getKLDivergenceVectorSpaceDistance(darr1, darr2,
+									darr1.length);
+					al.add(kl);
+				}
+
+				backTraceMap.put(dd, al);
+				System.out.println("Complete topicNumberOfLDARun="+dd.topicNumberOfLDARun+" whichTopic="+dd.whichTopic);
+
+			}
+
+		}
+		System.out.println("backTraceMap construction complete");
+
+		FileOutputStream fs = new FileOutputStream(BACKTRACEMAPPATH);
+		ObjectOutputStream os = new ObjectOutputStream(fs);
+		os.writeObject(backTraceMap);
+		os.flush();
+		os.close();
+		fs.close();
+	}
+	
+	/* Construct trace map */
 	private static void constructAndSaveTraceMap() throws Exception {
 		List<String> phiFiles = KLAnalysis_crossLDAruns.getPhiFiles();
 
@@ -208,6 +363,16 @@ public class KLAnalysis_crossLDAruns implements Serializable {
 		ObjectInputStream ois = new ObjectInputStream(fs);
 		Hashtable<DictDistribution, List<Double>> ht = (Hashtable<DictDistribution, List<Double>>) ois
 				.readObject();
+		ois.close();
+		fs.close();
+		return ht;
+	}
+	
+	public static Hashtable<DictDistribution, List<Double>> readBackTraceMapFromFile()
+			throws Exception {
+		FileInputStream fs = new FileInputStream(BACKTRACEMAPPATH);
+		ObjectInputStream ois = new ObjectInputStream(fs);
+		Hashtable<DictDistribution, List<Double>> ht = (Hashtable<DictDistribution, List<Double>>) ois.readObject();
 		ois.close();
 		fs.close();
 		return ht;
