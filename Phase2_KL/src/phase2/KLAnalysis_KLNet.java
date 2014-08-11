@@ -10,12 +10,7 @@ public class KLAnalysis_KLNet {
 	public static double 	connectThreshold=3.3;
 	public static double 	fixedconnectThreshold=3.3;
 	public static double    connectThresholdMinus = 0.01; //initial 0.005
-	
-	public static String outputPath = "C:/Users/zouc/Desktop/lda/mid_data/layerCompare.txt";  // --> obsolete
-//	public static String branchPath ="C:/Users/zouc/Desktop/lda/mid_data/";
-//	public static String allTopicKeywordsPath = "C:/Users/zouc/Desktop/lda/mid_data/allTopicKeywords.txt";
-//	public static String autoScanConnection = "C:/Users/zouc/Desktop/lda/mid_data/autoScanConnection.txt";
-	
+		
 	public static String branchPath ="C:/Users/nancy.quan/Desktop/lda/mid_data/";
 	public static String allTopicKeywordsPath = "C:/Users/nancy.quan/Desktop/lda/mid_data/allTopicKeywords.txt";
 	public static String autoScanConnection =   "C:/Users/nancy.quan/Desktop/lda/mid_data/autoScanConnection.txt";
@@ -27,9 +22,11 @@ public class KLAnalysis_KLNet {
 		
 		/* DON'T Run below two functions at the same time */		
 		// this is for auto select the best connection parameter.
-		KLAnalysis_KLNet.autoScanConnectionThreshold(backTraceMap, traceMap);		
+		//KLAnalysis_KLNet.autoScanConnectionThreshold(backTraceMap, traceMap);		
 		// this is the core function of this class.
 		//KLAnalysis_KLNet.getBranchSaveBranchSaveKeywords(backTraceMap, traceMap);
+		
+		KLAnalysis_KLNet.getAllKLDistance(backTraceMap, traceMap);
 		
 	}
 	
@@ -208,8 +205,8 @@ public class KLAnalysis_KLNet {
 				curLayerBranch += "] ";				
 			}
 			
-			//connection threshold minus
-			connectThreshold = connectThreshold-connectThresholdMinus;
+			//connection threshold add
+			connectThreshold = connectThreshold+connectThresholdMinus;
 			
 			count = newcount;
 			fullBranchUp.add(curLayerBranch);
@@ -263,38 +260,6 @@ public class KLAnalysis_KLNet {
 		}
 	}
 	
-	// almost no use method
-	public static void allLayerCompare() throws Exception {
-		Hashtable<DictDistribution, List<Double>> newTraceMap = KLUtil_generateTraceMap.readTraceMapFromFile();
-		//KLAnalysis_crossLDAruns.printTraceMap(newTraceMap);
-		System.out.println(newTraceMap.size());
-		
-		File file = new File(outputPath);
-		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-		
-		for (int tn=1; tn<200; tn++) {
-		
-			System.out.println("=========== CURRENT LAYER IS topicNumberOfLDARun="+ tn +"==========");
-			bw.write("=========== CURRENT LAYER IS topicNumberOfLDARun="+ tn +"==========\n");
-			
-			for (int i=0;i<tn;i++) {
-			
-				DictDistribution dd = new DictDistribution(tn,i);
-				List<Double> list = newTraceMap.get(dd);
-				System.out.println("\tcurrent layer topicNumberOfLDARun="+tn+" whichTopic="+i);
-				bw.write("\tcurrent layer topicNumberOfLDARun="+tn+" whichTopic="+i+"\n");
-			
-				for (int j=0;j<list.size();j++) {
-					if (list.get(j)<KLAnalysis_KLNet.connectThreshold){
-						System.out.println("\t\tconnect whichTopic="+j+" with KLDistance="+list.get(j));
-						bw.write("\t\tconnect whichTopic="+j+" with KLDistance="+list.get(j)+"\n");
-					}
-				}
-			}
-		}
-		bw.close();
-	}
-	
 	// util method
 	private static List<String> reverse(List<String> branch) {
 		
@@ -311,6 +276,24 @@ public class KLAnalysis_KLNet {
 		for (String s:branch) {
 			System.out.println(s);
 			bw.write(s+"\n");
+		}
+		bw.close();
+	}
+	
+	// util method. DHou wants to see all topics KL distances between each adjacent layer 
+	private static void getAllKLDistance(Hashtable<DictDistribution, List<Double>> backTraceMap, Hashtable<DictDistribution, List<Double>> traceMap) throws Exception {
+		String outputpath = "C:/Users/nancy.quan/Desktop/lda/mid_data/allkl.txt";
+		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(outputpath)));
+		for (int layer=1;layer<200; layer++) {
+			bw.write("layer "+layer+" to layer "+(layer+1)+":");
+			System.out.println("layer "+layer+" to layer "+(layer+1));
+			for (int topicNum = 0; topicNum<layer; topicNum++) {
+				DictDistribution dd = new DictDistribution(layer, topicNum);
+				List<Double> dlist = traceMap.get(dd);
+				for (double d:dlist)
+					bw.write(d+" ");
+			}
+			bw.write("\n");
 		}
 		bw.close();
 	}
