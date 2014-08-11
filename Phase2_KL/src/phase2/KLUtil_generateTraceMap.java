@@ -6,18 +6,25 @@ import java.util.*;
 public class KLUtil_generateTraceMap implements Serializable {
 
 	private static final long serialVersionUID = -3965922551823098111L;
+	
 	//public static String PHIFILEPATH = "E:/temp/output/casestudy/";
 	//public static String TRACEMAPPATH = "C:/Users/Administrator/Desktop/mid-data/traceMap.txt";
-	public static String PHIFILEPATH = "C:/Users/zouc/Desktop/lda/output/";
-	public static String TRACEMAPPATH = "C:/Users/zouc/Desktop/lda/mid_data/traceMap.txt";
-	public static String BACKTRACEMAPPATH = "C:/Users/zouc/Desktop/lda/mid_data/backTraceMap.txt";
+	
+//	public static String PHIFILEPATH = "C:/Users/zouc/Desktop/lda/output/";
+//	public static String TRACEMAPPATH = "C:/Users/zouc/Desktop/lda/mid_data/traceMap.txt";
+//	public static String BACKTRACEMAPPATH = "C:/Users/zouc/Desktop/lda/mid_data/backTraceMap.txt";
+	
+	public static String PHIFILEPATH = "C:/Users/nancy.quan/Desktop/lda/output/casestudy/";
+	public static String TRACEMAPPATH =     "C:/Users/nancy.quan/Desktop/lda/mid_data/traceMap.txt";
+	public static String BACKTRACEMAPPATH = "C:/Users/nancy.quan/Desktop/lda/mid_data/backTraceMap.txt";	
+	
 	public static double KLThreshold = 2.5;
 
 	public static void main(String[] args) throws Exception {
 		//KLAnalysis_crossLDAruns.constructAndSaveBackTraceMap();
 		//KLAnalysis_crossLDAruns.constructAndSaveTraceMap();
-		//KLAnalysis_crossLDAruns.traceMapAdjacentLayerAnalysis(4);
-		KLUtil_generateTraceMap.backTraceMapAdjacentLayerAnalysis(4);
+		KLUtil_generateTraceMap.traceMapAdjacentLayerAnalysis(40);
+		//KLUtil_generateTraceMap.backTraceMapAdjacentLayerAnalysis(4);
 	}
 	
 	private static void backTraceMapAdjacentLayerAnalysis(int topicNumberOfLDARun) throws Exception {
@@ -171,7 +178,7 @@ public class KLUtil_generateTraceMap implements Serializable {
 				for (int jj=0;jj<list.size();jj++) {
 					if (list.get(jj)<KLThreshold){
 						System.out.print(jj+" ");
-						//System.out.println("connect whichTopic="+jj+" with KLDistance="+list.get(jj));
+						System.out.print("connect whichTopic="+jj+" with KLDistance="+list.get(jj)+"\n");
 					}
 				}
 				System.out.print(")");

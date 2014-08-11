@@ -6,15 +6,19 @@ import java.io.*;
 public class KLAnalysis_KLNet {
 	
 	public static int 		topicNumberOfLDARun = 40;
-	public static int 		whichTopic = 26;
-	public static double 	connectThreshold=2.4;
-	public static double 	fixedconnectThreshold=2.4;
-	public static double    connectThresholdMinus = 0.000; //initial 0.005
+	public static int 		whichTopic = 12;
+	public static double 	connectThreshold=3.3;
+	public static double 	fixedconnectThreshold=3.3;
+	public static double    connectThresholdMinus = 0.01; //initial 0.005
 	
 	public static String outputPath = "C:/Users/zouc/Desktop/lda/mid_data/layerCompare.txt";  // --> obsolete
-	public static String branchPath ="C:/Users/zouc/Desktop/lda/mid_data/";
-	public static String allTopicKeywordsPath = "C:/Users/zouc/Desktop/lda/mid_data/allTopicKeywords.txt";
-	public static String autoScanConnection = "C:/Users/zouc/Desktop/lda/mid_data/autoScanConnection.txt";
+//	public static String branchPath ="C:/Users/zouc/Desktop/lda/mid_data/";
+//	public static String allTopicKeywordsPath = "C:/Users/zouc/Desktop/lda/mid_data/allTopicKeywords.txt";
+//	public static String autoScanConnection = "C:/Users/zouc/Desktop/lda/mid_data/autoScanConnection.txt";
+	
+	public static String branchPath ="C:/Users/nancy.quan/Desktop/lda/mid_data/";
+	public static String allTopicKeywordsPath = "C:/Users/nancy.quan/Desktop/lda/mid_data/allTopicKeywords.txt";
+	public static String autoScanConnection =   "C:/Users/nancy.quan/Desktop/lda/mid_data/autoScanConnection.txt";
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -23,9 +27,9 @@ public class KLAnalysis_KLNet {
 		
 		/* DON'T Run below two functions at the same time */		
 		// this is for auto select the best connection parameter.
-		//KLAnalysis_KLNet.autoScanConnectionThreshold(backTraceMap, traceMap);		
+		KLAnalysis_KLNet.autoScanConnectionThreshold(backTraceMap, traceMap);		
 		// this is the core function of this class.
-		KLAnalysis_KLNet.getBranchSaveBranchSaveKeywords(backTraceMap, traceMap);
+		//KLAnalysis_KLNet.getBranchSaveBranchSaveKeywords(backTraceMap, traceMap);
 		
 	}
 	
@@ -56,7 +60,7 @@ public class KLAnalysis_KLNet {
 		
 		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(autoScanConnection)));
 		
-		int[] topicNumberArr = {17, 18, 19,20,21,22,24,25,26,28,29,30,32,35,36,37,39};
+		int[] topicNumberArr = {22};
 		
 		for (int topicNum:topicNumberArr) {
 			
@@ -64,7 +68,8 @@ public class KLAnalysis_KLNet {
 			System.out.println("============== This is topic "+ topicNum +" ================");
 			bw.write("============== This is topic "+ topicNum +" ================"+"\n");
 		
-			for (double d1=2.0; d1<=3.5; d1+=0.2) {
+			//for (double d1=2.0; d1<=3.5; d1+=0.2) {
+			for (double d1=2.0; d1<=3.9; d1+=0.1) {
 			
 				for (double d2=0; d2<0.08; d2+=0.002) {
 					connectThreshold = d1;
