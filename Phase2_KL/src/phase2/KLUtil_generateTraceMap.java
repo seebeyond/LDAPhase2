@@ -7,9 +7,7 @@ public class KLUtil_generateTraceMap implements Serializable {
 
 	private static final long serialVersionUID = -3965922551823098111L;
 	
-	public static String PHIFILEPATH = "C:/Users/nancy.quan/Desktop/lda/output/casestudy/";
-	public static String TRACEMAPPATH =     "C:/Users/nancy.quan/Desktop/lda/mid_data/traceMap.txt";
-	public static String BACKTRACEMAPPATH = "C:/Users/nancy.quan/Desktop/lda/mid_data/backTraceMap.txt";	
+	
 	
 	public static double KLThreshold = 2.5;
 
@@ -242,7 +240,7 @@ public class KLUtil_generateTraceMap implements Serializable {
 		}
 		System.out.println("backTraceMap construction complete");
 
-		FileOutputStream fs = new FileOutputStream(BACKTRACEMAPPATH);
+		FileOutputStream fs = new FileOutputStream(Constant.BACKTRACEMAPPATH);
 		ObjectOutputStream os = new ObjectOutputStream(fs);
 		os.writeObject(backTraceMap);
 		os.flush();
@@ -320,7 +318,7 @@ public class KLUtil_generateTraceMap implements Serializable {
 
 	// ------------------- Util Functions ------------------------------
 	private static List<String> getPhiFiles() {
-		File folder = new File(PHIFILEPATH);
+		File folder = new File(Constant.PHIFILEPATH);
 		String[] fileList = folder.list();
 		List<String> targetFiles = new ArrayList<String>();
 		for (String s : fileList)
@@ -341,7 +339,7 @@ public class KLUtil_generateTraceMap implements Serializable {
 
 		List<String> targetFilesWithFullPath = new ArrayList<String>();
 		for (int i = 0; i < targetFiles.size(); i++) {
-			targetFilesWithFullPath.add(PHIFILEPATH + targetFiles.get(i));
+			targetFilesWithFullPath.add(Constant.PHIFILEPATH + targetFiles.get(i));
 		}
 		return targetFilesWithFullPath;
 	}
@@ -349,7 +347,7 @@ public class KLUtil_generateTraceMap implements Serializable {
 	private static void saveTraceMapToFile(
 			Hashtable<DictDistribution, List<Double>> traceMap)
 			throws IOException {
-		FileOutputStream fs = new FileOutputStream(TRACEMAPPATH);
+		FileOutputStream fs = new FileOutputStream(Constant.TRACEMAPPATH);
 		ObjectOutputStream os = new ObjectOutputStream(fs);
 		os.writeObject(traceMap);
 		os.flush();
@@ -359,7 +357,7 @@ public class KLUtil_generateTraceMap implements Serializable {
 
 	public static Hashtable<DictDistribution, List<Double>> readTraceMapFromFile()
 			throws Exception {
-		FileInputStream fs = new FileInputStream(TRACEMAPPATH);
+		FileInputStream fs = new FileInputStream(Constant.TRACEMAPPATH);
 		ObjectInputStream ois = new ObjectInputStream(fs);
 		Hashtable<DictDistribution, List<Double>> ht = (Hashtable<DictDistribution, List<Double>>) ois
 				.readObject();
@@ -370,7 +368,7 @@ public class KLUtil_generateTraceMap implements Serializable {
 	
 	public static Hashtable<DictDistribution, List<Double>> readBackTraceMapFromFile()
 			throws Exception {
-		FileInputStream fs = new FileInputStream(BACKTRACEMAPPATH);
+		FileInputStream fs = new FileInputStream(Constant.BACKTRACEMAPPATH);
 		ObjectInputStream ois = new ObjectInputStream(fs);
 		Hashtable<DictDistribution, List<Double>> ht = (Hashtable<DictDistribution, List<Double>>) ois.readObject();
 		ois.close();

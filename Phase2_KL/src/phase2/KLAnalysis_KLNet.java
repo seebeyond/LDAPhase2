@@ -1,19 +1,12 @@
 package phase2;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.io.*;
 
 public class KLAnalysis_KLNet {
 	
-	public static int 		topicNumberOfLDARun = 40;
-	public static int 		whichTopic = 12;
-	public static double 	connectThreshold=3.3;
-	public static double 	fixedconnectThreshold=3.3;
-	public static double    connectThresholdMinus = 0.01; //initial 0.005
-		
-	public static String branchPath ="C:/Users/nancy.quan/Desktop/lda/mid_data/";
-	public static String allTopicKeywordsPath = "C:/Users/nancy.quan/Desktop/lda/mid_data/allTopicKeywords.txt";
-	public static String autoScanConnection =   "C:/Users/nancy.quan/Desktop/lda/mid_data/autoScanConnection.txt";
+	
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -26,24 +19,26 @@ public class KLAnalysis_KLNet {
 		// this is the core function of this class.
 		//KLAnalysis_KLNet.getBranchSaveBranchSaveKeywords(backTraceMap, traceMap);
 		
-		KLAnalysis_KLNet.getAllKLDistance(backTraceMap, traceMap);
+		// DHou's requirement. Probably not use it anymore
+		//KLAnalysis_KLNet.getAllKLDistance(backTraceMap, traceMap);
+		KLAnalysis_KLNet.getAllMinKLDistance(backTraceMap, traceMap);
 		
 	}
 	
 	
 	// --------------------------- CORE Procedure of this class >>>>> start ------------------------------------------------
-	private static void getBranchSaveBranchSaveKeywords(Hashtable<DictDistribution, List<Double>> backTraceMap, Hashtable<DictDistribution, List<Double>> traceMap) throws Exception {
+	public static void getBranchSaveBranchSaveKeywords(Hashtable<DictDistribution, List<Double>> backTraceMap, Hashtable<DictDistribution, List<Double>> traceMap) throws Exception {
 		// get branch 
-		List<String> branch = KLAnalysis_KLNet.getFullBranchUpAndDown(topicNumberOfLDARun, whichTopic, backTraceMap, traceMap);
+		List<String> branch = KLAnalysis_KLNet.getFullBranchUpAndDown(Constant.topicNumberOfLDARun, Constant.whichTopic, backTraceMap, traceMap);
 				
 		// save branch into local file
-		KLAnalysis_KLNet.printAndSaveBranch(branch, topicNumberOfLDARun, whichTopic, fixedconnectThreshold);
+		KLAnalysis_KLNet.printAndSaveBranch(branch, Constant.topicNumberOfLDARun, Constant.whichTopic, Constant.fixedconnectThreshold, Constant.connectThresholdMinus);
 				
 		//get topic keywords for the topics in branch, and then save it into local file	
-		KLAnalysis_KLNet.saveAllTopicKeywordsInBranch(branch, topicNumberOfLDARun, whichTopic, fixedconnectThreshold);
+		KLAnalysis_KLNet.saveAllTopicKeywordsInBranch(branch, Constant.topicNumberOfLDARun, Constant.whichTopic, Constant.fixedconnectThreshold, Constant.connectThresholdMinus);
 	}
 	
-	private static List<String> getFullBranchUpAndDown(int topicNumberOfLDARun, int whichTopic, Hashtable<DictDistribution, List<Double>> backTraceMap, Hashtable<DictDistribution, List<Double>> traceMap) throws Exception {
+	public static List<String> getFullBranchUpAndDown(int topicNumberOfLDARun, int whichTopic, Hashtable<DictDistribution, List<Double>> backTraceMap, Hashtable<DictDistribution, List<Double>> traceMap) throws Exception {
 		List<String> branch = new ArrayList<String>();		
 		KLAnalysis_KLNet.getFullBranchUp(topicNumberOfLDARun, whichTopic, branch, backTraceMap);
 		branch = KLAnalysis_KLNet.reverse(branch);
@@ -53,37 +48,45 @@ public class KLAnalysis_KLNet {
 	// --------------------------- CORE Procedure of this class <<<<< end ------------------------------------------------
 	
 	// --------------------------- Util - auto find the best branch >>>>> start -------------------------------------------------------------------
-	private static void autoScanConnectionThreshold(Hashtable<DictDistribution, List<Double>> backTraceMap, Hashtable<DictDistribution, List<Double>> traceMap) throws Exception {
+	public static void autoScanConnectionThreshold(Hashtable<DictDistribution, List<Double>> backTraceMap, Hashtable<DictDistribution, List<Double>> traceMap) throws Exception {
 		
-		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(autoScanConnection)));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(Constant.autoScanConnection+"autoScanConnection"+Constant.topicNumberOfLDARun+".txt")));
 		
-		int[] topicNumberArr = {22};
+		int[] topicNumberArr = {26,2,33,17,20,21};
 		
 		for (int topicNum:topicNumberArr) {
 			
-			whichTopic = topicNum;
+			Constant.whichTopic = topicNum;
 			System.out.println("============== This is topic "+ topicNum +" ================");
 			bw.write("============== This is topic "+ topicNum +" ================"+"\n");
-		
-			//for (double d1=2.0; d1<=3.5; d1+=0.2) {
-			for (double d1=2.0; d1<=3.9; d1+=0.1) {
 			
-				for (double d2=0; d2<0.08; d2+=0.002) {
-					connectThreshold = d1;
-					connectThresholdMinus = d2;
+			DecimalFormat df=new DecimalFormat("#.000"); 
+			
+			//for (double d1=2.0; d1<=3.5; d1+=0.2) {
+			for (double d1=1.0; d1<=4.0; d1+=0.1) {
+			
+				//for (double d2=0; d2<0.08; d2+=0.002) {
+				for (double d2=0; d2<=0; d2+=1){
+					Constant.connectThreshold = d1;
+					Constant.connectThresholdMinus = d2;
 					StringBuilder info = new StringBuilder();
 				
-					List<String> branch = KLAnalysis_KLNet.getFullBranchUpAndDown(topicNumberOfLDARun, whichTopic, backTraceMap, traceMap);
+					List<String> branch = KLAnalysis_KLNet.getFullBranchUpAndDown(Constant.topicNumberOfLDARun, Constant.whichTopic, backTraceMap, traceMap);
+//					if (branch.get(branch.size()-1).contains("200") == false)
+//						continue;
 				
-					info.append(d1+" "+d2+": ");
+					info.append(df.format(d1)+" "+df.format(d2)+": ");
+					//info.append(d1+" "+d2+": ");
 				
 					for (String s: branch) {
-						int num = 0;
+						StringBuilder num = new StringBuilder();
 						for (int i=0;i<s.length();i++) {
-							if (s.charAt(i)==']')
-								num++;
+							if (s.charAt(i)!=' ')
+								num.append(s.charAt(i));
+							else 
+								break;
 						}
-						info.append(num+" ");
+						info.append(num.toString()+"\t");
 					}
 				System.out.println(info);
 				bw.write(info+"\n");
@@ -97,7 +100,7 @@ public class KLAnalysis_KLNet {
 	
 	
 	//-----------------"save all topic keywords in a specific branch" >>>>> START ----------------------
-	public static void saveAllTopicKeywordsInBranch(List<String> branch, int topicNumberOfLDARun, int whichTopic, double connectThreshold) throws Exception{
+	public static void saveAllTopicKeywordsInBranch(List<String> branch, int topicNumberOfLDARun, int whichTopic, double connectThreshold, double thresholdMinus) throws Exception{
 		
 		// calculat a line number in alltopicKeywords file		
 		List<Integer> lines = KLAnalysis_KLNet.getSeq(branch);
@@ -106,10 +109,10 @@ public class KLAnalysis_KLNet {
 		for (int i=lines.size()-1; i>=0;i--)
 			slines.push(lines.get(i));
 		
-		File file = new File(branchPath+"branch "+topicNumberOfLDARun+" "+whichTopic+" "+connectThreshold+" topicKeyWords.txt");
+		File file = new File(Constant.branchPath+"branch "+topicNumberOfLDARun+" "+whichTopic+" "+connectThreshold+" "+thresholdMinus+" topicKeyWords.txt");
 		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 		
-		File rfile = new File(allTopicKeywordsPath);
+		File rfile = new File(Constant.allTopicKeywordsPath);
 		BufferedReader br = new BufferedReader(new FileReader(rfile));
 		String str = "";
 		int lineNum = 1;
@@ -127,7 +130,7 @@ public class KLAnalysis_KLNet {
 		br.close();
 		bw.close();
 	}
-	private static List<Integer> getSeq(List<String> branch) {
+	public static List<Integer> getSeq(List<String> branch) {
 		
 		List<Integer> seq = new ArrayList<Integer>();		
 //		branch.add("[(1 0)->(3 2)] ");
@@ -156,7 +159,7 @@ public class KLAnalysis_KLNet {
 		return noDupSeq;
 	}
 	// the formula is:  (1 0)=>line 1;  (3 2)=>line6; (m n)=> sum of 1 to (m-1), then add n+1
-	private static int getSeqNum(String str) {
+	public static int getSeqNum(String str) {
 		String[] arr = str.split(" ");
 		int layer = Integer.valueOf(arr[0]);
 		int topic = Integer.valueOf(arr[1]);
@@ -180,7 +183,7 @@ public class KLAnalysis_KLNet {
 		while (!ll.isEmpty()) {
 			
 			int newcount=0;
-			String curLayerBranch = "";
+			String curLayerBranch = count + " ";
 			
 			while (count>0) {
 				
@@ -193,7 +196,7 @@ public class KLAnalysis_KLNet {
 					return ;
 				
 				for (int i=0;i<dlist.size();i++) {
-					if (dlist.get(i)<connectThreshold) {
+					if (dlist.get(i)<Constant.connectThreshold) {
 						DictDistribution nextdd = new DictDistribution(cur.topicNumberOfLDARun-1, i);
 						curLayerBranch += "("+nextdd.topicNumberOfLDARun+" "+nextdd.whichTopic+")";
 						if (!ll.contains(nextdd)) {
@@ -206,7 +209,7 @@ public class KLAnalysis_KLNet {
 			}
 			
 			//connection threshold add
-			connectThreshold = connectThreshold+connectThresholdMinus;
+			Constant.connectThreshold = Constant.connectThreshold+Constant.connectThresholdMinus;
 			
 			count = newcount;
 			fullBranchUp.add(curLayerBranch);
@@ -226,7 +229,7 @@ public class KLAnalysis_KLNet {
 		while (!ll.isEmpty()) {
 			
 			int newcount=0;
-			String curLayerBranch = "";
+			String curLayerBranch = count+ " ";
 			
 			while (count>0) {
 				
@@ -239,7 +242,7 @@ public class KLAnalysis_KLNet {
 					return ;
 				
 				for (int i=0;i<dlist.size();i++) {
-					if (dlist.get(i)<connectThreshold) {
+					if (dlist.get(i)<Constant.connectThreshold) {
 						DictDistribution nextdd = new DictDistribution(cur.topicNumberOfLDARun+1, i);
 						curLayerBranch += "("+nextdd.topicNumberOfLDARun+" "+nextdd.whichTopic+")";
 						if (!ll.contains(nextdd)) {
@@ -252,7 +255,7 @@ public class KLAnalysis_KLNet {
 			}
 			
 			//connection threshold minus
-			connectThreshold = connectThreshold-connectThresholdMinus;
+			Constant.connectThreshold = Constant.connectThreshold-Constant.connectThresholdMinus;
 			
 			count = newcount;
 			fullBranch.add(curLayerBranch);
@@ -261,7 +264,7 @@ public class KLAnalysis_KLNet {
 	}
 	
 	// util method
-	private static List<String> reverse(List<String> branch) {
+	public static List<String> reverse(List<String> branch) {
 		
 		List<String> al = new ArrayList<String>();
 		for (int i=branch.size()-1; i>=0; i--)
@@ -269,32 +272,62 @@ public class KLAnalysis_KLNet {
 		return al;
 	}
 	// util method
-	private static void printAndSaveBranch(List<String> branch, int topicNumberOfLDARun, int whichTopic, double connectThreshold) throws Exception{
-		File file = new File(branchPath+"branch "+topicNumberOfLDARun+" "+whichTopic+" "+connectThreshold+".txt");
+	public static void printAndSaveBranch(List<String> branch, int topicNumberOfLDARun, int whichTopic, double connectThreshold, double thresholdMinus) throws Exception{
+		File file = new File(Constant.branchPath+"branch "+topicNumberOfLDARun+" "+whichTopic+" "+connectThreshold+" "+thresholdMinus+".txt");
 		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 				
 		for (String s:branch) {
-			System.out.println(s);
+			//System.out.println(s);
 			bw.write(s+"\n");
 		}
 		bw.close();
 	}
 	
+	// --------------------------------- Util of DHou >>>>> start  ------------------------------------------------
 	// util method. DHou wants to see all topics KL distances between each adjacent layer 
-	private static void getAllKLDistance(Hashtable<DictDistribution, List<Double>> backTraceMap, Hashtable<DictDistribution, List<Double>> traceMap) throws Exception {
+	public static void getAllKLDistance(Hashtable<DictDistribution, List<Double>> backTraceMap, Hashtable<DictDistribution, List<Double>> traceMap) throws Exception {
 		String outputpath = "C:/Users/nancy.quan/Desktop/lda/mid_data/allkl.txt";
 		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(outputpath)));
 		for (int layer=1;layer<200; layer++) {
-			bw.write("layer "+layer+" to layer "+(layer+1)+":");
+			bw.write("layer "+layer+" to layer "+(layer+1)+" average KL distance is : ");
 			System.out.println("layer "+layer+" to layer "+(layer+1));
+			int count = 0;
+			double total=0;
 			for (int topicNum = 0; topicNum<layer; topicNum++) {
 				DictDistribution dd = new DictDistribution(layer, topicNum);
 				List<Double> dlist = traceMap.get(dd);
-				for (double d:dlist)
-					bw.write(d+" ");
+				for (double d:dlist) {
+					count++;
+					total += d;
+				}
+					
 			}
+			bw.write(String.valueOf(total/count));
 			bw.write("\n");
 		}
 		bw.close();
 	}
+	public static void getAllMinKLDistance(Hashtable<DictDistribution, List<Double>> backTraceMap, Hashtable<DictDistribution, List<Double>> traceMap) throws Exception {
+		DecimalFormat df = new DecimalFormat("#.0000");
+		String outputpath = "C:/Users/nancy.quan/Desktop/lda/mid_data/allminkl.txt";
+		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(outputpath)));
+		for (int layer=1;layer<200; layer++) {
+			bw.write("layer "+layer+" to layer "+(layer+1) +" ");
+			List<Double> minlist = new ArrayList<Double>();
+			for (int topicNum = 0; topicNum<layer; topicNum++) {
+				DictDistribution dd = new DictDistribution(layer, topicNum);
+				List<Double> dlist = traceMap.get(dd);
+				Collections.sort(dlist);
+				minlist.add(dlist.get(0));
+			}
+			Collections.sort(minlist);
+			for (double d:minlist)
+				bw.write(df.format(d)+" ");
+			bw.write("\n");
+		}
+		bw.close();
+	}
+	
+	
+	// --------------------------------- Util of DHou <<<<< end  ------------------------------------------------
 }
