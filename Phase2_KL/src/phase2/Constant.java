@@ -3,7 +3,7 @@ package phase2;
 public class Constant {
 	
 	public static int 		topicNumberOfLDARun = 40;
-	public static int 		whichTopic = 12;
+	public static int 		whichTopic = 21;
 	public static double 	connectThreshold=0;
 	public static double 	fixedconnectThreshold=0;
 	public static double    connectThresholdMinus = 0.00; //initial 0.005

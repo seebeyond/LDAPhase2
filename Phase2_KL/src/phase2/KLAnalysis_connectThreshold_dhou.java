@@ -3,6 +3,8 @@ package phase2;
 import java.text.DecimalFormat;
 import java.util.*;
 
+// pre-set a similar topic number value; calculate double[] threshold for all the thresholds for each two layers.
+// then construct the branch
 public class KLAnalysis_connectThreshold_dhou {
 
 	private static int similarTopicNum = 2;
