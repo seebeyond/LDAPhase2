@@ -4,7 +4,7 @@ import java.util.*;
 
 public class KLAnalysis_connectThreshold_david {
 
-	private static int topN = 2;
+	private static int topN = 5;
 
 	public static void main(String[] args) throws Exception {
 

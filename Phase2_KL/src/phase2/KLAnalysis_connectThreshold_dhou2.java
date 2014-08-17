@@ -2,6 +2,7 @@ package phase2;
 
 import java.util.*;
 
+/* always take top 5 KL values for the new layers */
 public class KLAnalysis_connectThreshold_dhou2 {
 	
 
