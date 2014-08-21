@@ -108,7 +108,13 @@ public class KLAnalysis_connectThreshold_david {
 		
 		DictDistribution dd = new DictDistribution(layer, whichTopic);
 		LinkedList<DictDistribution> ll= new LinkedList<DictDistribution>();
+		
+		HashSet<DictDistribution> hs_existInBranch = new HashSet<DictDistribution>();
+		
 		ll.add(dd);
+		
+		hs_existInBranch.add(dd);
+		
 		int count = 1;
 		
 		while (!ll.isEmpty()) {
