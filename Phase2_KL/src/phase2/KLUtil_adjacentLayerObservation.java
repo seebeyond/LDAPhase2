@@ -8,8 +8,8 @@ public class KLUtil_adjacentLayerObservation {
 
 	public static void main(String[] args) throws Exception {
 		
-		int layer = 71;
-		int whichTopic = 46;
+		int layer = 192;
+		int whichTopic = 114;
 		
 		KLUtil_adjacentLayerObservation.lookUp(layer, whichTopic);
 		
